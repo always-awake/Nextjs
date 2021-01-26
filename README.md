@@ -12,3 +12,37 @@
     - 규모가 크고 안정적인 서버 구축(for production)이 필요할 때 사용될 수 있음
   - 객체지향 프로그래밍, 함수형 프로그램, 함수 반응형 프로그래밍도 가능
 - 타입스크립트 기반 프레임워크
+
+### main.ts
+
+- NestJs 어플리케이션은 `main.ts`에서 시작한다.
+- NestJs에는 main.ts가 항상 존재해야한다.
+  - 파일을 삭제하거나, 이름을 수정하면 안됨
+
+```js
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+### 모듈 (module)
+
+- 특정 모듈들의 루트 모듈
+- NestJs 어플리케이션의 일부
+  - django의 경우 `apps`과 같은 개념
+  - 예) 인스타그램 어플리케이션 - photos 모듈, videos 모듈...
+
+### 컨트롤러 (controller)
+
+- express.js의 `controller/router`와 같은 개념
+- 데코레이터 사용하면, 라우터를 직접 세팅하지 않아도 된다.
+  - @Post, @Get 등
+
+### 서비스 (service)
+
+- 비즈니스 로직을 실행하는 역할
