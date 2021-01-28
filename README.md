@@ -46,3 +46,43 @@ bootstrap();
 ### 서비스 (service)
 
 - 비즈니스 로직을 실행하는 역할
+
+### ValidationPipe & DTO
+
+```js
+// main.ts
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  // 아래 property 외에도 다양한 property 존재
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, // If set to true validator will strip validated object of any properties that do not have any decorators.
+    forbidNonWhitelisted: true, // If set to true, instead of stripping non-whitelisted properties validator will throw an error.
+    transform: true, // url내 파라미터값들을 컨트롤러에 선언된 타입으로 자동으로 타입을 변환시켜준다.
+  }))
+  await app.listen(3000);
+}
+bootstrap();
+
+
+// create-movie-dto.ts
+import { IsString, IsNumber } from 'class-validator'
+
+export class CreateMobieDto {
+
+  @IsString()
+  readonly title: string
+
+  @IsNumber()
+  readonly year: number
+
+  @IsString({ each: true })
+  readonly genres: string[]
+}
+```
+
+- 코드를 간결하게 만들어준다.
+- NestJs가 입력되는 쿼리에 대해 typescript를 이용해 **유효성 검사**를 할 수 있도록 한다.
