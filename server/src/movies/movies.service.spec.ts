@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { isRgbColor } from 'class-validator';
 import { MoviesService } from './movies.service';
 
 describe('MoviesService', () => {
@@ -50,4 +51,69 @@ describe('MoviesService', () => {
       }
     })
   })
+
+  describe('Test deleteOne', () => {
+    it('should deletes a movie', () => {
+      service.createMovie({
+        title: 'Test Movie',
+        genres: ['Test genres'],
+        year: 2000,
+      })
+
+      const allMoviesBeforDelete = service.getAll().length
+      service.deleteOne(1)
+      const allMoviesAfterDelete = service.getAll().length
+
+      expect(allMoviesAfterDelete).toBeLessThan(allMoviesBeforDelete)
+    })
+
+    it('should return a 404', () => {
+      try {
+        service.deleteOne(999);
+      } catch(e) {
+        expect(e).toBeInstanceOf(NotFoundException)
+      }
+    })
+  })
+
+  describe('Test createMovie', () => {
+    it('should create a movie', () => {
+      const beforeCreate = service.getAll().length
+      service.createMovie({
+        title: 'Test Movie',
+        genres: ['Test genres'],
+        year: 2000,
+      })
+      const afterCreate = service.getAll().length
+
+      expect(afterCreate).toBeGreaterThan(beforeCreate)
+    })
+  })
+
+  describe('Test updateMovie', () => {
+    it('should update a movie', () => {
+      const any_title = 'Updated Test'
+      service.createMovie({
+        title: 'Test Movie',
+        genres: ['Test genres'],
+        year: 2000,
+      })
+      service.updateMovie(1, { title: any_title })
+      const movie = service.getOne(1);
+      
+      expect(movie.title).toEqual(any_title)
+    })
+
+    it('should throw a NotFound Error', () => {
+      try {
+        service.updateMovie(999, {})
+      } catch(e) {
+        expect(e).toBeInstanceOf(NotFoundException)
+      }
+    })
+    
+  })
+  
+  
+  
 });
