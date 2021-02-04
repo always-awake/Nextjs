@@ -9,7 +9,7 @@ export class MoviesController {
   // service를 수동으로 import 하지 않음(자동으로 injection됨 - dependency injection) (@Injectable() 데코레이터 참고)
   constructor(private readonly movieService: MoviesService) {}
 
-  @Get()
+  @Get('')
   getAll(){
     return this.movieService.getAll
   }
